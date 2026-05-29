@@ -8,36 +8,40 @@ import StocksPanel from './components/StocksPanel'
 import { fetchNews, analyzeArticle, getReasoning } from './services/api'
 
 export default function App() {
-  // ── State ───────────────────────────────────────────────────────────────────
-  const [articles, setArticles] = useState([])
-  const [selectedArticle, setSelectedArticle] = useState(null)
+  // ── 1. State Variables ──────────────────────────────────────────────────────
+  // These variables hold the data for our app. When they change, the screen updates automatically.
+  const [articles, setArticles] = useState([])                 // Stores the list of news articles
+  const [selectedArticle, setSelectedArticle] = useState(null) // Which article the user clicked on
 
-  // Per-article cached analyses (keyed by article.id)
+  // Caching: We save the analysis so we don't have to ask the AI twice for the same article
   const [analyses, setAnalyses] = useState({})
 
-  // Current selected article's full data
-  const [currentAnalysis, setCurrentAnalysis] = useState(null)
-  const [currentReasoning, setCurrentReasoning] = useState(null)
+  // Current selected article's AI data
+  const [currentAnalysis, setCurrentAnalysis] = useState(null)   // Sentiment & Sectors
+  const [currentReasoning, setCurrentReasoning] = useState(null) // Groq Reasoning
 
-  // Loading states
+  // Loading states (shows spinners on the screen)
   const [isLoadingNews, setIsLoadingNews] = useState(false)
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false)
   const [isLoadingReasoning, setIsLoadingReasoning] = useState(false)
 
   const [error, setError] = useState(null)
 
-  // ── Load news on mount ──────────────────────────────────────────────────────
+  // ── 2. Load News When App Starts ────────────────────────────────────────────
+  // useEffect runs this code once when the page first loads
   useEffect(() => {
     loadNews()
   }, [])
 
+  // Function to fetch the news from our backend
   const loadNews = async () => {
     setIsLoadingNews(true)
     setError(null)
     try {
-      const data = await fetchNews(8)
+      const data = await fetchNews(8) // Get 8 articles
       setArticles(data.articles || [])
-      // Auto-analyze all articles in background for badge display
+      
+      // Bonus: Automatically run a quick AI analysis in the background for all articles
       if (data.articles?.length > 0) {
         backgroundAnalyzeAll(data.articles)
       }
@@ -49,7 +53,7 @@ export default function App() {
     }
   }
 
-  // Run lightweight analysis on all articles for the news list badges
+  // A helper to analyze all articles silently in the background
   const backgroundAnalyzeAll = async (articleList) => {
     const batch = articleList.map(async (article) => {
       try {
@@ -58,59 +62,68 @@ export default function App() {
           title: article.title,
           summary: article.summary,
         })
+        // Save the result in our cache
         setAnalyses((prev) => ({ ...prev, [article.id]: result }))
       } catch (e) {
-        // Silent fail for background analysis
+        // We silently ignore errors in the background
       }
     })
     await Promise.allSettled(batch)
   }
 
-  // ── Handle article selection ────────────────────────────────────────────────
+  // ── 3. What Happens When You Click An Article ───────────────────────────────
   const handleArticleSelect = useCallback(async (article) => {
     setSelectedArticle(article)
 
-    // If already analyzed, reuse cached data
+    // Check if we already analyzed this article before
     const cached = analyses[article.id]
     if (cached) {
-      setCurrentAnalysis(cached)
-      // Still fetch reasoning + graph (they're article-specific heavy operations)
-      await fetchGraphAndReasoning(article, cached)
+      setCurrentAnalysis(cached) // Load it from memory instantly
+      await fetchReasoning(article, cached) // Fetch the deeper reasoning
       return
     }
 
-    // Full analysis flow
+    // If we haven't analyzed it yet, start loading...
     setIsLoadingAnalysis(true)
     setCurrentAnalysis(null)
     setCurrentReasoning(null)
 
     try {
-      // 1. Sentiment + Sectors
+      // Step A: Get Sentiment (Positive/Negative) and Sectors
       const analysis = await analyzeArticle({
         article_id: article.id,
         title: article.title,
         summary: article.summary,
       })
       setCurrentAnalysis(analysis)
+      
+      // Save it to our cache
       setAnalyses((prev) => ({ ...prev, [article.id]: analysis }))
       setIsLoadingAnalysis(false)
 
-      // 2. Graph + Reasoning in parallel
-      await fetchGraphAndReasoning(article, analysis)
+      // Step B: Ask Groq for deep reasoning based on this analysis
+      await fetchReasoning(article, analysis)
     } catch (err) {
       setError('Analysis failed. Check backend connection.')
       setIsLoadingAnalysis(false)
     }
   }, [analyses])
 
-  const fetchGraphAndReasoning = async (article, analysis) => {
+  // ── 4. Fetch Deep Reasoning from Groq AI ────────────────────────────────────
+  const fetchReasoning = async (article, analysis) => {
     const sectors = analysis?.sectors || ['general']
     const sentiment = analysis?.sentiment?.label || 'neutral'
 
     setIsLoadingReasoning(true)
 
     try {
-      const reasoning = await getReasoning({ title: article.title, summary: article.summary, sentiment, sectors })
+      // Send the article info to our backend (which talks to Groq)
+      const reasoning = await getReasoning({ 
+        title: article.title, 
+        summary: article.summary, 
+        sentiment, 
+        sectors 
+      })
       setCurrentReasoning(reasoning)
     } catch (err) {
       console.error(err)
