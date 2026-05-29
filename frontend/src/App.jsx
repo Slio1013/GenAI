@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import Header from './components/Header'
 import NewsPanel from './components/NewsPanel'
 import SentimentPanel from './components/SentimentPanel'
@@ -216,6 +217,7 @@ export default function App() {
           Not financial advice
         </footer>
       </main>
+      <Analytics />
     </div>
   )
 }
