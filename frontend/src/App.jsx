@@ -4,9 +4,8 @@ import NewsPanel from './components/NewsPanel'
 import SentimentPanel from './components/SentimentPanel'
 import SectorCards from './components/SectorCards'
 import ReasoningPanel from './components/ReasoningPanel'
-import PropagationGraph from './components/PropagationGraph'
 import StocksPanel from './components/StocksPanel'
-import { fetchNews, analyzeArticle, getGraph, getReasoning } from './services/api'
+import { fetchNews, analyzeArticle, getReasoning } from './services/api'
 
 export default function App() {
   // ── State ───────────────────────────────────────────────────────────────────
@@ -19,12 +18,10 @@ export default function App() {
   // Current selected article's full data
   const [currentAnalysis, setCurrentAnalysis] = useState(null)
   const [currentReasoning, setCurrentReasoning] = useState(null)
-  const [currentGraph, setCurrentGraph] = useState(null)
 
   // Loading states
   const [isLoadingNews, setIsLoadingNews] = useState(false)
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false)
-  const [isLoadingGraph, setIsLoadingGraph] = useState(false)
   const [isLoadingReasoning, setIsLoadingReasoning] = useState(false)
 
   const [error, setError] = useState(null)
@@ -86,7 +83,6 @@ export default function App() {
     setIsLoadingAnalysis(true)
     setCurrentAnalysis(null)
     setCurrentReasoning(null)
-    setCurrentGraph(null)
 
     try {
       // 1. Sentiment + Sectors
@@ -111,21 +107,16 @@ export default function App() {
     const sectors = analysis?.sectors || ['general']
     const sentiment = analysis?.sentiment?.label || 'neutral'
 
-    setIsLoadingGraph(true)
     setIsLoadingReasoning(true)
 
-    // Fetch both in parallel
-    await Promise.allSettled([
-      getGraph({ title: article.title, sectors, sentiment })
-        .then((g) => setCurrentGraph(g))
-        .catch(console.error)
-        .finally(() => setIsLoadingGraph(false)),
-
-      getReasoning({ title: article.title, summary: article.summary, sentiment, sectors })
-        .then((r) => setCurrentReasoning(r))
-        .catch(console.error)
-        .finally(() => setIsLoadingReasoning(false)),
-    ])
+    try {
+      const reasoning = await getReasoning({ title: article.title, summary: article.summary, sentiment, sectors })
+      setCurrentReasoning(reasoning)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsLoadingReasoning(false)
+    }
   }
 
   // ── Render ──────────────────────────────────────────────────────────────────
@@ -201,17 +192,9 @@ export default function App() {
           />
         </div>
 
-        {/* ── Row 3: Propagation Graph (full width) ── */}
-        <div className="h-[560px]">
-          <PropagationGraph
-            graphData={currentGraph}
-            isLoading={isLoadingGraph}
-          />
-        </div>
-
         {/* Footer */}
         <footer className="mt-8 text-center text-[11px] text-slate-600 font-mono">
-          MarketPulse AI · FinBERT Sentiment · Groq LLaMA-3 Reasoning · React Flow Visualization
+          MarketPulse AI · Groq AI Sentiment & Reasoning
           <span className="mx-2">·</span>
           Not financial advice
         </footer>

@@ -3,7 +3,7 @@ load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import news, analyze, graph, reasoning
+from routes import news, analyze, reasoning
 
 app = FastAPI(
     title="Market Intelligence API",
@@ -23,7 +23,6 @@ app.add_middleware(
 # Register route modules
 app.include_router(news.router, prefix="/news", tags=["News"])
 app.include_router(analyze.router, prefix="/analyze", tags=["Analysis"])
-app.include_router(graph.router, prefix="/graph", tags=["Graph"])
 app.include_router(reasoning.router, prefix="/reasoning", tags=["Reasoning"])
 
 

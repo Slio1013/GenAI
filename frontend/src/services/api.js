@@ -53,14 +53,6 @@ export const analyzeArticlesBatch = async (articles) => {
 }
 
 /**
- * Get economic propagation graph for React Flow
- */
-export const getGraph = async ({ title, sectors, sentiment }) => {
-  const res = await api.post('/graph/', { title, sectors, sentiment })
-  return res.data
-}
-
-/**
  * Get AI reasoning + stock suggestions
  */
 export const getReasoning = async ({ title, summary, sentiment, sectors }) => {
