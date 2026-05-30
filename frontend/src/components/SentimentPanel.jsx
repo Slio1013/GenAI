@@ -82,7 +82,7 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
           </h2>
           <div className="ml-auto flex items-center gap-1.5">
             <Zap className="w-3 h-3 text-slate-500" />
-            <span className="text-[10px] font-mono text-slate-500">Groq</span>
+            <span className="text-[10px] font-mono text-slate-500">FinBERT</span>
           </div>
         </div>
         <div className="space-y-3">
@@ -106,7 +106,7 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
           </h2>
           <div className="ml-auto flex items-center gap-1.5">
             <Zap className="w-3 h-3 text-slate-500" />
-            <span className="text-[10px] font-mono text-slate-500">Groq</span>
+            <span className="text-[10px] font-mono text-slate-500">FinBERT</span>
           </div>
         </div>
         <p className="text-sm text-slate-500 text-center py-6">
@@ -131,7 +131,7 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
         </h2>
         <div className="ml-auto flex items-center gap-1.5">
           <Zap className="w-3 h-3 text-slate-500" />
-          <span className="text-[10px] font-mono text-slate-500">Groq</span>
+          <span className="text-[10px] font-mono text-slate-500">FinBERT</span>
         </div>
       </div>
 

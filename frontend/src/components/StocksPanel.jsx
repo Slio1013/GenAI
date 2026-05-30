@@ -89,7 +89,7 @@ export default function StocksPanel({ reasoning, isLoading }) {
         <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
           Stock Signals
         </h2>
-        <div className={`ml-auto flex items-center gap-1.5 ${stocks.length === 0 ? 'opacity-50' : ''}`}>
+        <div className="ml-auto flex items-center gap-1.5">
           <Zap className="w-3 h-3 text-slate-500" />
           <span className="text-[10px] font-mono text-slate-500">
             Groq

@@ -1,6 +1,6 @@
 import React from 'react'
 import { ExternalLink, Clock, TrendingUp } from 'lucide-react'
-import { formatTime, truncate, getSentimentBadgeClass } from '../utils/helpers'
+import { formatTime, truncate, getSentimentBadgeClass, formatSector } from '../utils/helpers'
 
 function NewsCard({ article, isSelected, onClick, analysis }) {
   const sentiment = analysis?.sentiment?.label || null
@@ -45,12 +45,12 @@ function NewsCard({ article, isSelected, onClick, analysis }) {
         <div className="flex items-center gap-1.5">
           {sentiment && (
             <span className={getSentimentBadgeClass(sentiment)}>
-              {sentiment}
+              {sentiment.charAt(0).toUpperCase() + sentiment.slice(1).toLowerCase()}
             </span>
           )}
           {analysis?.sectors?.slice(0, 2).map((s) => (
-            <span key={s} className="sector-pill text-[10px]">
-              {s.replace(/_/g, ' ')}
+            <span key={s} className="sector-pill">
+              {formatSector(s)}
             </span>
           ))}
         </div>

@@ -55,7 +55,7 @@ export default function ReasoningPanel({ reasoning, isLoading }) {
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
             AI Reasoning Engine
           </h2>
-          <div className="ml-auto flex items-center gap-1.5 opacity-50">
+          <div className="ml-auto flex items-center gap-1.5">
             <Zap className="w-3 h-3 text-slate-500" />
             <span className="text-[10px] font-mono text-slate-500">Groq</span>
           </div>
