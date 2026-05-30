@@ -69,20 +69,20 @@
 
   /* Sentiment badges */
   .badge-positive {
-    @apply bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-medium font-mono px-2 py-0.5 rounded-full;
+    @apply bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-medium font-mono px-2.5 rounded-full h-5 inline-flex items-center justify-center;
   }
 
   .badge-negative {
-    @apply bg-red-500/15 text-red-400 border border-red-500/30 text-xs font-medium font-mono px-2 py-0.5 rounded-full;
+    @apply bg-red-500/15 text-red-400 border border-red-500/30 text-xs font-medium font-mono px-2.5 rounded-full h-5 inline-flex items-center justify-center;
   }
 
   .badge-neutral {
-    @apply bg-blue-500/15 text-blue-300 border border-blue-500/30 text-xs font-medium font-mono px-2 py-0.5 rounded-full;
+    @apply bg-blue-500/15 text-blue-300 border border-blue-500/30 text-xs font-medium font-mono px-2.5 rounded-full h-5 inline-flex items-center justify-center;
   }
 
   /* Sector pills */
   .sector-pill {
-    @apply bg-brand-500/10 text-brand-300 border border-brand-500/20 text-xs font-mono px-2.5 py-1 rounded-full whitespace-nowrap;
+    @apply bg-brand-500/10 text-brand-300 border border-brand-500/20 text-xs font-medium font-mono px-2.5 rounded-full h-5 inline-flex items-center justify-center whitespace-nowrap;
   }
 
   /* Loading shimmer */
