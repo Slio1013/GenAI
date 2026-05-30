@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.get("/")
-async def fetch_news(count: int = Query(default=8, ge=1, le=20)):
+async def fetch_news(count: int = Query(default=50, ge=1, le=100)):
     """
     Fetch latest financial/economic news.
     Returns list of articles with title, summary, source, timestamp, url.

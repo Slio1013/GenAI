@@ -39,10 +39,10 @@ export default function App() {
     setIsLoadingNews(true)
     setError(null)
     try {
-      const data = await fetchNews(8) // Get 8 articles
+      const data = await fetchNews(40) // Get 40 articles
       setArticles(data.articles || [])
       
-      // Bonus: Automatically run a quick AI analysis in the background for all articles
+      // Automatically run a quick AI analysis in the background for the top articles
       if (data.articles?.length > 0) {
         backgroundAnalyzeAll(data.articles)
       }
@@ -54,22 +54,25 @@ export default function App() {
     }
   }
 
-  // A helper to analyze all articles silently in the background
+  // A helper to analyze all articles silently in small chunks to avoid API rate limits
   const backgroundAnalyzeAll = async (articleList) => {
-    const batch = articleList.map(async (article) => {
-      try {
-        const result = await analyzeArticle({
-          article_id: article.id,
-          title: article.title,
-          summary: article.summary,
-        })
-        // Save the result in our cache
-        setAnalyses((prev) => ({ ...prev, [article.id]: result }))
-      } catch (e) {
-        // We silently ignore errors in the background
-      }
-    })
-    await Promise.allSettled(batch)
+    // Process 4 at a time in sequence to avoid rate-limiting
+    for (let i = 0; i < articleList.length; i += 4) {
+      const chunk = articleList.slice(i, i + 4)
+      await Promise.allSettled(chunk.map(async (article) => {
+        try {
+          const result = await analyzeArticle({
+            article_id: article.id,
+            title: article.title,
+            summary: article.summary,
+          })
+          // Save the result in our cache
+          setAnalyses((prev) => ({ ...prev, [article.id]: result }))
+        } catch (e) {
+          // We silently ignore errors in the background
+        }
+      }))
+    }
   }
 
   // ── 3. What Happens When You Click An Article ───────────────────────────────
