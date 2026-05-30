@@ -1,5 +1,5 @@
 """
-/analyze endpoint - runs FinBERT sentiment + sector detection on an article
+/analyze endpoint - runs Groq AI sentiment + sector detection on an article
 """
 
 from fastapi import APIRouter, HTTPException
@@ -14,7 +14,7 @@ router = APIRouter()
 async def analyze_article(request: AnalyzeRequest):
     """
     Analyze a news article:
-    1. Run FinBERT sentiment classification
+    1. Run Groq AI sentiment classification
     2. Detect affected sectors via keyword rules
     Returns sentiment label, confidence, and impacted sectors.
     """
@@ -22,7 +22,7 @@ async def analyze_article(request: AnalyzeRequest):
         # Combine title + summary for richer analysis
         full_text = f"{request.title}. {request.summary}"
 
-        # FinBERT sentiment
+        # Groq AI sentiment
         sentiment = await analyze_sentiment_async(full_text)
 
         # Rule-based sector detection

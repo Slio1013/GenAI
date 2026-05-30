@@ -118,7 +118,7 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
         <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
           Sentiment Analysis
         </h2>
-        <span className="ml-auto text-[10px] font-mono text-slate-500">FinBERT</span>
+        <span className="ml-auto text-[10px] font-mono text-slate-500">Groq LLaMA 3.1</span>
       </div>
 
       {/* Main sentiment display */}
