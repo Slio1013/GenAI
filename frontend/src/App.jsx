@@ -207,7 +207,7 @@ export default function App() {
 
         {/* Footer */}
         <footer className="mt-8 text-center text-[11px] text-slate-600 font-mono">
-          MarketPulse AI · Groq AI Sentiment & Reasoning
+          Geo Alpha · Groq AI Sentiment & Reasoning
           <span className="mx-2">·</span>
           Not financial advice
         </footer>

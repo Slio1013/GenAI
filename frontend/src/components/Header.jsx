@@ -1,5 +1,5 @@
 import React from 'react'
-import { Activity, Zap, BarChart2, RefreshCw } from 'lucide-react'
+import { Activity, Zap, Globe, RefreshCw } from 'lucide-react'
 
 export default function Header({ onRefresh, isLoading }) {
   return (
@@ -13,14 +13,14 @@ export default function Header({ onRefresh, isLoading }) {
             {/* Animated logo mark */}
             <div className="relative flex items-center justify-center w-9 h-9">
               <div className="absolute inset-0 rounded-lg bg-brand-500/20 animate-pulse-slow" />
-              <BarChart2 className="w-5 h-5 text-brand-400 relative z-10" />
+              <Globe className="w-5 h-5 text-brand-400 relative z-10" />
             </div>
             <div>
               <span className="font-display font-700 text-white text-lg tracking-tight">
-                Market<span className="text-brand-400">Pulse</span>
+                Geo<span className="text-brand-400">Alpha</span>
               </span>
               <div className="text-[10px] text-slate-500 font-mono uppercase tracking-widest -mt-0.5">
-                AI Intelligence
+                Geo-Financial Intelligence
               </div>
             </div>
           </div>

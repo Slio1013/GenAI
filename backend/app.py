@@ -7,8 +7,8 @@ from routes import news, analyze, reasoning
 
 # 1. Create the backend application
 app = FastAPI(
-    title="Market Intelligence API",
-    description="AI-powered financial market intelligence platform",
+    title="Geo Alpha API",
+    description="AI-powered geo-financial intelligence platform",
     version="1.0.0"
 )
 
@@ -29,7 +29,7 @@ app.include_router(reasoning.router, prefix="/reasoning", tags=["Reasoning"]) # 
 # 4. A simple home route just to check if the server is running
 @app.get("/")
 async def root():
-    return {"status": "ok", "message": "Market Intelligence API is running"}
+    return {"status": "ok", "message": "Geo Alpha API is running"}
 
 # 5. A health check route used by hosting platforms like Render
 @app.get("/health")

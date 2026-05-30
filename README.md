@@ -1,4 +1,4 @@
-# 📊 MarketPulse AI — Financial Market Intelligence Platform
+# 📊 Geo Alpha — Geo-Financial Market Intelligence Platform
 
 > A beginner-friendly, real-time AI dashboard that fetches financial news, analyzes sentiment, and provides economic reasoning and stock suggestions using Groq AI.
 
@@ -21,7 +21,7 @@ This project is built to be simple and easy to understand. Here is the flow of d
 The project is split into two main parts: the **Backend** (Python) and the **Frontend** (React).
 
 ```text
-market-intel/
+geo-alpha/
 ├── backend/                  # Python API server
 │   ├── app.py                # Main entry point for the backend
 │   ├── routes/               # API endpoints (/news, /analyze, /reasoning)
