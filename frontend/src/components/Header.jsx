@@ -44,7 +44,7 @@ export default function Header({ onRefresh, isLoading }) {
             <button
               onClick={onRefresh}
               disabled={isLoading}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-500/15 border border-brand-500/30 text-brand-300 text-sm font-medium hover:bg-brand-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-500/10 border border-brand-500/25 text-brand-300 text-sm font-semibold hover:bg-brand-500/20 hover:border-brand-500/40 active:scale-95 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_12px_rgba(37,168,255,0.05)] hover:shadow-[0_0_18px_rgba(37,168,255,0.15)]"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
               <span className="hidden sm:inline">Refresh</span>

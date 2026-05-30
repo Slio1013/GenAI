@@ -6,25 +6,25 @@ function StockCard({ stock }) {
   const config = getDirectionConfig(stock.direction)
 
   return (
-    <div className={`p-3 rounded-lg border ${config.bg} ${config.border} transition-all hover:scale-[1.02] duration-200`}>
-      <div className="flex items-start justify-between mb-1.5">
-        {/* Ticker */}
-        <span className={`text-base font-display font-bold font-mono ${config.color}`}>
-          {stock.ticker}
-        </span>
-        {/* Direction badge */}
-        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${config.bg} border ${config.border}`}>
-          <span className={`text-[10px] font-mono font-bold ${config.color}`}>
-            {config.icon} {config.label}
+    <div className={`p-3.5 rounded-xl border ${config.bg} ${config.border} transition-all hover:shadow-md hover:translate-y-[-2px] duration-300 flex items-center justify-between gap-4`}>
+      <div className="flex-1 min-w-0">
+        {/* Ticker & Sector */}
+        <div className="flex items-baseline gap-2 mb-0.5">
+          <span className={`text-base font-display font-bold tracking-tight ${config.color}`}>
+            {stock.ticker}
+          </span>
+          <span className="text-[9px] text-slate-500 font-mono uppercase tracking-wider truncate">
+            {formatSector(stock.sector)}
           </span>
         </div>
+        {/* Company name */}
+        <p className="text-[11px] text-slate-400 truncate">{stock.company}</p>
       </div>
 
-      <p className="text-[11px] text-slate-400 mb-1 truncate">{stock.company}</p>
-
-      <div className="flex items-center gap-1.5 mt-1.5">
-        <span className="text-[9px] text-slate-600 font-mono uppercase">
-          {formatSector(stock.sector)}
+      {/* Direction badge */}
+      <div className={`flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/80 border ${config.border} shadow-inner`}>
+        <span className={`text-[9px] font-mono font-bold tracking-wider ${config.color}`}>
+          {config.icon} {config.label}
         </span>
       </div>
     </div>
@@ -45,7 +45,7 @@ function StockSection({ title, stocks, Icon, color }) {
           {stocks.length} picks
         </span>
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="flex flex-col gap-2">
         {stocks.map((stock) => (
           <StockCard key={stock.ticker} stock={stock} />
         ))}
@@ -108,8 +108,8 @@ export default function StocksPanel({ reasoning, isLoading }) {
           />
 
           {/* Disclaimer */}
-          <p className="text-[10px] text-slate-600 text-center leading-relaxed">
-            ⚠️ For informational purposes only. Not financial advice.
+          <p className="text-[9px] text-slate-600 text-center mt-4 border-t border-white/[0.04] pt-3 leading-relaxed">
+            Note: For informational purposes only. Not financial advice.
           </p>
         </div>
       )}

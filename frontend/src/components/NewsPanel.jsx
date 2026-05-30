@@ -9,13 +9,16 @@ function NewsCard({ article, isSelected, onClick, analysis }) {
     <div
       onClick={() => onClick(article)}
       className={`
-        p-4 rounded-xl border cursor-pointer transition-all duration-200
+        relative p-4 rounded-xl border cursor-pointer transition-all duration-300 overflow-hidden
         ${isSelected
-          ? 'bg-brand-500/10 border-brand-500/40 shadow-lg shadow-brand-500/10'
-          : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.12]'
+          ? 'bg-brand-500/[0.08] border-brand-500/35 shadow-[0_4px_20px_rgba(37,168,255,0.08)]'
+          : 'bg-white/[0.01] border-white/[0.05] hover:bg-white/[0.04] hover:border-white/[0.1] hover:translate-x-0.5'
         }
       `}
     >
+      {isSelected && (
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-500 shadow-[0_0_8px_#25a8ff]" />
+      )}
       {/* Source + time row */}
       <div className="flex items-center justify-between mb-2">
         <span className="text-[10px] text-brand-400 font-mono uppercase tracking-wider">

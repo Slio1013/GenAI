@@ -6,24 +6,27 @@ import { formatSector, confidencePct } from '../utils/helpers'
 const SENTIMENT_CONFIG = {
   positive: {
     color: '#34d399',
-    bg: 'from-emerald-500/20 to-emerald-600/5',
-    border: 'border-emerald-500/30',
+    bg: 'from-emerald-500/10 to-emerald-600/5',
+    border: 'border-emerald-500/20',
+    shadow: 'shadow-[0_0_20px_rgba(52,211,153,0.08)]',
     Icon: TrendingUp,
     label: 'POSITIVE',
     fill: '#34d399',
   },
   negative: {
     color: '#f87171',
-    bg: 'from-red-500/20 to-red-600/5',
-    border: 'border-red-500/30',
+    bg: 'from-red-500/10 to-red-600/5',
+    border: 'border-red-500/20',
+    shadow: 'shadow-[0_0_20px_rgba(248,113,113,0.08)]',
     Icon: TrendingDown,
     label: 'NEGATIVE',
     fill: '#f87171',
   },
   neutral: {
     color: '#60a5fa',
-    bg: 'from-blue-500/20 to-blue-600/5',
-    border: 'border-blue-500/30',
+    bg: 'from-blue-500/10 to-blue-600/5',
+    border: 'border-blue-500/20',
+    shadow: 'shadow-[0_0_20px_rgba(96,165,250,0.08)]',
     Icon: Minus,
     label: 'NEUTRAL',
     fill: '#60a5fa',
@@ -35,7 +38,7 @@ function ConfidenceGauge({ confidence, color }) {
   const data = [{ value: pct, fill: color }]
 
   return (
-    <div className="relative w-24 h-24">
+    <div className="relative w-28 h-28">
       <ResponsiveContainer width="100%" height="100%">
         <RadialBarChart
           cx="50%"
@@ -61,8 +64,8 @@ function ConfidenceGauge({ confidence, color }) {
         </RadialBarChart>
       </ResponsiveContainer>
       <div className="absolute inset-0 flex items-center justify-center flex-col">
-        <span className="text-lg font-display font-bold" style={{ color }}>{pct}%</span>
-        <span className="text-[9px] text-slate-500 font-mono uppercase">conf.</span>
+        <span className="text-xl font-mono font-bold" style={{ color }}>{pct}%</span>
+        <span className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">conf.</span>
       </div>
     </div>
   )
@@ -122,13 +125,13 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
       </div>
 
       {/* Main sentiment display */}
-      <div className={`rounded-lg p-4 bg-gradient-to-br ${config.bg} border ${config.border} mb-4`}>
+      <div className={`rounded-xl p-5 bg-gradient-to-br ${config.bg} border ${config.border} ${config.shadow} mb-4`}>
         <div className="flex items-center justify-between">
           <div>
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1.5">
               <Icon className="w-5 h-5" style={{ color: config.color }} />
               <span
-                className="text-2xl font-display font-bold tracking-tight"
+                className="text-2xl font-display font-black tracking-tight"
                 style={{ color: config.color }}
               >
                 {config.label}
@@ -138,7 +141,9 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
               Financial sentiment classification
             </p>
           </div>
-          <ConfidenceGauge confidence={confidence} color={config.color} />
+          <div className="flex-shrink-0">
+            <ConfidenceGauge confidence={confidence} color={config.color} />
+          </div>
         </div>
       </div>
 

@@ -76,16 +76,16 @@ export const getDirectionConfig = (direction) => {
     return {
       icon: '↑',
       color: 'text-emerald-400',
-      bg: 'bg-emerald-500/10',
-      border: 'border-emerald-500/30',
+      bg: 'bg-gradient-to-br from-emerald-500/[0.07] to-transparent',
+      border: 'border-emerald-500/20',
       label: 'BULLISH',
     }
   }
   return {
     icon: '↓',
     color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    border: 'border-red-500/30',
+    bg: 'bg-gradient-to-br from-red-500/[0.07] to-transparent',
+    border: 'border-red-500/20',
     label: 'BEARISH',
   }
 }

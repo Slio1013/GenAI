@@ -1,22 +1,22 @@
 import React from 'react'
-import { Layers } from 'lucide-react'
+import { Layers, Zap, Laptop, Landmark, Package, Building2, Shield, Plane, Car, Pill, Sprout, Bitcoin, Store, BarChart2 } from 'lucide-react'
 import { formatSector } from '../utils/helpers'
 
-// Visual config per sector
+// Visual config per sector (Lucide icons mapping)
 const SECTOR_ICONS = {
-  energy: '⚡',
-  technology: '💻',
-  banking: '🏦',
-  consumer_goods: '🛒',
-  real_estate: '🏠',
-  defense: '🛡️',
-  airlines: '✈️',
-  automotive: '🚗',
-  healthcare: '⚕️',
-  agriculture: '🌾',
-  cryptocurrency: '₿',
-  retail: '🏪',
-  general: '📊',
+  energy: Zap,
+  technology: Laptop,
+  banking: Landmark,
+  consumer_goods: Package,
+  real_estate: Building2,
+  defense: Shield,
+  airlines: Plane,
+  automotive: Car,
+  healthcare: Pill,
+  agriculture: Sprout,
+  cryptocurrency: Bitcoin,
+  retail: Store,
+  general: BarChart2,
 }
 
 const SECTOR_DESC = {
@@ -36,7 +36,7 @@ const SECTOR_DESC = {
 }
 
 function SectorCard({ sector, sentiment }) {
-  const icon = SECTOR_ICONS[sector] || '📊'
+  const IconComponent = SECTOR_ICONS[sector] || BarChart2
   const desc = SECTOR_DESC[sector] || 'Market sector'
 
   const borderColor = {
@@ -53,8 +53,8 @@ function SectorCard({ sector, sentiment }) {
 
   return (
     <div className={`p-3 rounded-lg bg-white/[0.03] border ${borderColor} shadow-lg ${glowColor} hover:bg-white/[0.06] transition-all duration-200`}>
-      <div className="flex items-center gap-2 mb-1.5">
-        <span className="text-lg">{icon}</span>
+      <div className="flex items-center gap-2.5 mb-1.5">
+        <IconComponent className="w-4 h-4 text-brand-400" />
         <span className="text-xs font-display font-semibold text-slate-200">
           {formatSector(sector)}
         </span>

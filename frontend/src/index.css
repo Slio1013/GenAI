@@ -7,7 +7,6 @@
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: rgba(37, 168, 255, 0.3) transparent;
-    font-family: 'Roboto', sans-serif !important;
   }
 
   *::-webkit-scrollbar {
@@ -28,28 +27,31 @@
   }
 
   body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: #050a12;
     color: #e2e8f0;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace !important;
   }
 }
 
 @layer components {
   /* Glassmorphism card */
   .glass-card {
-    @apply bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] rounded-xl;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+    @apply bg-gradient-to-b from-white/[0.04] to-white/[0.01] backdrop-blur-md border border-white/[0.06] rounded-xl;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .glass-card-hover {
-    @apply glass-card transition-all duration-300 hover:bg-white/[0.06] hover:border-brand-500/30;
+    @apply glass-card transition-all duration-300 hover:from-white/[0.06] hover:to-white/[0.02] hover:border-brand-500/25;
   }
 
   /* Neon accent borders */
