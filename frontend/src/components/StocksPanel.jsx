@@ -1,5 +1,5 @@
 import React from 'react'
-import { TrendingUp, TrendingDown, DollarSign } from 'lucide-react'
+import { TrendingUp, TrendingDown, DollarSign, Zap } from 'lucide-react'
 import { formatSector, getDirectionConfig } from '../utils/helpers'
 
 function StockCard({ stock }) {
@@ -63,6 +63,10 @@ export default function StocksPanel({ reasoning, isLoading }) {
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
             Stock Signals
           </h2>
+          <div className="ml-auto flex items-center gap-1.5 animate-pulse">
+            <Zap className="w-3 h-3 text-slate-500" />
+            <span className="text-[10px] font-mono text-slate-500">Groq processing...</span>
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-2">
           {[1, 2, 3, 4].map((i) => (
@@ -85,7 +89,12 @@ export default function StocksPanel({ reasoning, isLoading }) {
         <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
           Stock Signals
         </h2>
-        <span className="ml-auto text-[10px] font-mono text-slate-500">Rule-Based</span>
+        <div className={`ml-auto flex items-center gap-1.5 ${stocks.length === 0 ? 'opacity-50' : ''}`}>
+          <Zap className="w-3 h-3 text-slate-500" />
+          <span className="text-[10px] font-mono text-slate-500">
+            Groq
+          </span>
+        </div>
       </div>
 
       {stocks.length === 0 ? (

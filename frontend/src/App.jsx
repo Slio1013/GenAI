@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import Header from './components/Header'
 import NewsPanel from './components/NewsPanel'
 import SentimentPanel from './components/SentimentPanel'
@@ -26,6 +26,7 @@ export default function App() {
   const [isLoadingReasoning, setIsLoadingReasoning] = useState(false)
 
   const [error, setError] = useState(null)
+  const selectedArticleIdRef = useRef(null)
 
   // ── 2. Load News When App Starts ────────────────────────────────────────────
   // useEffect runs this code once when the page first loads
@@ -74,11 +75,14 @@ export default function App() {
   // ── 3. What Happens When You Click An Article ───────────────────────────────
   const handleArticleSelect = useCallback(async (article) => {
     setSelectedArticle(article)
+    selectedArticleIdRef.current = article.id
 
     // Check if we already analyzed this article before
     const cached = analyses[article.id]
     if (cached) {
-      setCurrentAnalysis(cached) // Load it from memory instantly
+      if (selectedArticleIdRef.current === article.id) {
+        setCurrentAnalysis(cached) // Load it from memory instantly
+      }
       await fetchReasoning(article, cached) // Fetch the deeper reasoning
       return
     }
@@ -95,17 +99,22 @@ export default function App() {
         title: article.title,
         summary: article.summary,
       })
-      setCurrentAnalysis(analysis)
+      
+      if (selectedArticleIdRef.current === article.id) {
+        setCurrentAnalysis(analysis)
+        setIsLoadingAnalysis(false)
+      }
       
       // Save it to our cache
       setAnalyses((prev) => ({ ...prev, [article.id]: analysis }))
-      setIsLoadingAnalysis(false)
 
       // Step B: Ask Groq for deep reasoning based on this analysis
       await fetchReasoning(article, analysis)
     } catch (err) {
-      setError('Analysis failed. Check backend connection.')
-      setIsLoadingAnalysis(false)
+      if (selectedArticleIdRef.current === article.id) {
+        setError('Analysis failed. Check backend connection.')
+        setIsLoadingAnalysis(false)
+      }
     }
   }, [analyses])
 
@@ -114,7 +123,9 @@ export default function App() {
     const sectors = analysis?.sectors || ['general']
     const sentiment = analysis?.sentiment?.label || 'neutral'
 
-    setIsLoadingReasoning(true)
+    if (selectedArticleIdRef.current === article.id) {
+      setIsLoadingReasoning(true)
+    }
 
     try {
       // Send the article info to our backend (which talks to Groq)
@@ -124,11 +135,15 @@ export default function App() {
         sentiment, 
         sectors 
       })
-      setCurrentReasoning(reasoning)
+      if (selectedArticleIdRef.current === article.id) {
+        setCurrentReasoning(reasoning)
+      }
     } catch (err) {
       console.error(err)
     } finally {
-      setIsLoadingReasoning(false)
+      if (selectedArticleIdRef.current === article.id) {
+        setIsLoadingReasoning(false)
+      }
     }
   }
 

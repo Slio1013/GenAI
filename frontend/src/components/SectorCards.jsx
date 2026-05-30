@@ -94,7 +94,7 @@ export default function SectorCards({ analysis, isLoading }) {
         <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
           Sector Impact Detection
         </h2>
-        <span className="ml-auto text-[10px] font-mono text-slate-500">Rule-Based NLP</span>
+        <span className="ml-auto text-[10px] font-mono text-slate-500">Groq</span>
       </div>
 
       {sectors.length === 0 ? (

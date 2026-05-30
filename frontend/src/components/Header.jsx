@@ -37,8 +37,8 @@ export default function Header({ onRefresh, isLoading }) {
           <div className="flex items-center gap-3">
             {/* Live indicator */}
             <div className="hidden sm:flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-              <span className="text-xs text-slate-400 font-mono">GROQ LLaMA 3.1</span>
+              <Zap className="w-3.5 h-3.5 text-slate-500" />
+              <span className="text-xs text-slate-500 font-mono">Groq</span>
             </div>
 
             <button

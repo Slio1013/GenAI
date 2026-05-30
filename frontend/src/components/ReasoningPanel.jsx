@@ -25,9 +25,10 @@ export default function ReasoningPanel({ reasoning, isLoading }) {
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
             AI Reasoning Engine
           </h2>
-          <span className="ml-auto text-[10px] font-mono text-amber-400 animate-pulse">
-            ⚡ Groq processing...
-          </span>
+          <div className="ml-auto flex items-center gap-1.5 animate-pulse">
+            <Zap className="w-3 h-3 text-slate-500" />
+            <span className="text-[10px] font-mono text-slate-500">Groq processing...</span>
+          </div>
         </div>
         <div className="space-y-3">
           {[80, 60, 90, 50, 70].map((w, i) => (
@@ -46,7 +47,10 @@ export default function ReasoningPanel({ reasoning, isLoading }) {
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
             AI Reasoning Engine
           </h2>
-          <span className="ml-auto text-[10px] font-mono text-slate-500">Groq / LLaMA-3</span>
+          <div className="ml-auto flex items-center gap-1.5 opacity-50">
+            <Zap className="w-3 h-3 text-slate-500" />
+            <span className="text-[10px] font-mono text-slate-500">Groq</span>
+          </div>
         </div>
         <p className="text-sm text-slate-500 text-center py-6">
           Select an article to generate AI analysis
@@ -67,8 +71,8 @@ export default function ReasoningPanel({ reasoning, isLoading }) {
           AI Reasoning Engine
         </h2>
         <div className="ml-auto flex items-center gap-1.5">
-          <Zap className="w-3 h-3 text-amber-400" />
-          <span className="text-[10px] font-mono text-amber-400">Groq LLaMA-3</span>
+          <Zap className="w-3 h-3 text-slate-500" />
+          <span className="text-[10px] font-mono text-slate-500">Groq</span>
         </div>
       </div>
 

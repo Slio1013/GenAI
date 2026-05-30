@@ -5,7 +5,6 @@
 from fastapi import APIRouter, HTTPException
 from models.schemas import ReasoningRequest
 from services.reasoning_service import generate_reasoning
-from utils.stock_mapper import get_stock_suggestions
 
 router = APIRouter()
 
@@ -26,14 +25,14 @@ async def get_reasoning(request: ReasoningRequest):
             sectors=request.sectors,
         )
 
-        # Get rule-based stock suggestions
-        stocks = get_stock_suggestions(
-            sectors=request.sectors,
-            overall_sentiment=request.sentiment,
-        )
+        # Extract stock suggestions
+        stocks = reasoning.get("stock_suggestions", [])
+
+        # Separate reasoning details from stock suggestions
+        reasoning_details = {k: v for k, v in reasoning.items() if k != "stock_suggestions"}
 
         return {
-            "reasoning": reasoning,
+            "reasoning": reasoning_details,
             "stock_suggestions": stocks,
         }
     except Exception as e:

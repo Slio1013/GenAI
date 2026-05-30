@@ -1,5 +1,5 @@
 import React from 'react'
-import { Brain, TrendingUp, TrendingDown, Minus } from 'lucide-react'
+import { Brain, TrendingUp, TrendingDown, Zap } from 'lucide-react'
 import { RadialBarChart, RadialBar, ResponsiveContainer, PolarAngleAxis } from 'recharts'
 import { formatSector, confidencePct } from '../utils/helpers'
 
@@ -27,7 +27,7 @@ const SENTIMENT_CONFIG = {
     bg: 'from-blue-500/10 to-blue-600/5',
     border: 'border-blue-500/20',
     shadow: 'shadow-[0_0_20px_rgba(96,165,250,0.08)]',
-    Icon: Minus,
+    Icon: (props) => <TrendingUp {...props} style={{ ...props.style, transform: 'rotate(45deg)' }} />,
     label: 'NEUTRAL',
     fill: '#60a5fa',
   },
@@ -80,6 +80,10 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
             Sentiment Analysis
           </h2>
+          <div className="ml-auto flex items-center gap-1.5">
+            <Zap className="w-3 h-3 text-slate-500" />
+            <span className="text-[10px] font-mono text-slate-500">Groq</span>
+          </div>
         </div>
         <div className="space-y-3">
           <div className="h-20 shimmer rounded-lg" />
@@ -100,6 +104,10 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
             Sentiment Analysis
           </h2>
+          <div className="ml-auto flex items-center gap-1.5">
+            <Zap className="w-3 h-3 text-slate-500" />
+            <span className="text-[10px] font-mono text-slate-500">Groq</span>
+          </div>
         </div>
         <p className="text-sm text-slate-500 text-center py-6">
           Select an article to analyze sentiment
@@ -121,7 +129,10 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
         <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
           Sentiment Analysis
         </h2>
-        <span className="ml-auto text-[10px] font-mono text-slate-500">Groq LLaMA 3.1</span>
+        <div className="ml-auto flex items-center gap-1.5">
+          <Zap className="w-3 h-3 text-slate-500" />
+          <span className="text-[10px] font-mono text-slate-500">Groq</span>
+        </div>
       </div>
 
       {/* Main sentiment display */}

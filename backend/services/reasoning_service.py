@@ -32,10 +32,23 @@ Respond ONLY with a valid JSON object (no markdown, no explanation):
   "sector_impact": "1-2 sentence explanation of sector-level impact",
   "bullish_sectors": ["sector1", "sector2"],
   "bearish_sectors": ["sector1", "sector2"],
-  "affected_stocks": ["TICKER1", "TICKER2", "TICKER3", "TICKER4"]
+  "stock_suggestions": [
+    {{
+      "ticker": "TICKER1",
+      "company": "Company Name 1",
+      "direction": "bullish",
+      "sector": "sector_name",
+      "reason": "Specific 1-sentence reason why this stock is bullish."
+    }},
+    ...
+  ]
 }}
 
-Be concise, specific, and analytical. Use real ticker symbols."""
+Requirements for stock_suggestions:
+- Include exactly 3 bullish stock suggestions (direction is "bullish") that stand to benefit.
+- Include exactly 3 bearish stock suggestions (direction is "bearish") that are negatively impacted.
+- Total of exactly 6 suggestions.
+- Be concise, specific, and analytical. Use real, valid stock ticker symbols."""
 
 
 async def generate_reasoning(
@@ -62,7 +75,7 @@ async def generate_reasoning(
         "model": GROQ_MODEL,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.3,       # Low temperature for consistent analysis
-        "max_tokens": 500,
+        "max_tokens": 1000,
         "response_format": {"type": "json_object"},
     }
 
@@ -76,6 +89,20 @@ async def generate_reasoning(
             # Parse the JSON response
             result = json.loads(content)
 
+            suggestions = result.get("stock_suggestions", [])
+            formatted_suggestions = []
+            for s in suggestions:
+                direction = str(s.get("direction", "bullish")).lower()
+                if direction not in ["bullish", "bearish"]:
+                    direction = "bullish"
+                formatted_suggestions.append({
+                    "ticker": str(s.get("ticker", "")).upper(),
+                    "company": str(s.get("company", "")),
+                    "direction": direction,
+                    "sector": str(s.get("sector", "general")).lower(),
+                    "reason": str(s.get("reason", "Indirect impact from market events."))
+                })
+
             # Ensure all required fields exist
             return {
                 "economic_reasoning": result.get("economic_reasoning", "Analysis unavailable"),
@@ -83,7 +110,7 @@ async def generate_reasoning(
                 "sector_impact": result.get("sector_impact", "Sector analysis unavailable"),
                 "bullish_sectors": result.get("bullish_sectors", []),
                 "bearish_sectors": result.get("bearish_sectors", []),
-                "affected_stocks": result.get("affected_stocks", []),
+                "stock_suggestions": formatted_suggestions,
             }
 
         except json.JSONDecodeError as e:
