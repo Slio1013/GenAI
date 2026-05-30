@@ -1,15 +1,23 @@
 import React, { useState } from 'react'
-import { Cpu, ChevronDown, ChevronUp, Zap, ArrowRight } from 'lucide-react'
+import { Cpu, Zap } from 'lucide-react'
 import { formatSector } from '../utils/helpers'
 
-function ChainStep({ step, index }) {
-  // Parse "→" separated steps
+function ChainStep({ step, index, isLast }) {
   return (
-    <div className="flex items-start gap-2">
-      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-500/20 border border-brand-500/40 flex items-center justify-center mt-0.5">
-        <span className="text-[9px] text-brand-400 font-mono font-bold">{index + 1}</span>
+    <div className="flex gap-3">
+      {/* Timeline spine */}
+      <div className="flex flex-col items-center">
+        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/50 flex items-center justify-center shadow-[0_0_8px_rgba(168,85,247,0.3)]">
+          <span className="text-[9px] text-purple-300 font-mono font-bold">{index + 1}</span>
+        </div>
+        {!isLast && (
+          <div className="w-px flex-1 mt-1 bg-gradient-to-b from-purple-500/40 to-purple-500/05 min-h-[20px]" />
+        )}
       </div>
-      <p className="text-xs text-slate-300 leading-relaxed">{step.trim()}</p>
+      {/* Content */}
+      <div className={`pb-3 flex-1 ${isLast ? '' : ''}`}>
+        <p className="text-xs text-slate-300 leading-relaxed pt-1">{step.trim()}</p>
+      </div>
     </div>
   )
 }
@@ -88,19 +96,12 @@ export default function ReasoningPanel({ reasoning, isLoading }) {
         {/* Chain Reaction */}
         {chainSteps.length > 0 && (
           <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/[0.05] to-transparent border border-purple-500/15 shadow-[0_4px_16px_rgba(168,85,247,0.02)]">
-            <p className="text-[10px] text-purple-400 font-mono uppercase tracking-wider mb-2.5 font-semibold">
+            <p className="text-[10px] text-purple-400 font-mono uppercase tracking-wider mb-3 font-semibold">
               Chain Reaction
             </p>
-            <div className="space-y-2">
+            <div>
               {chainSteps.map((step, i) => (
-                <React.Fragment key={i}>
-                  <ChainStep step={step} index={i} />
-                  {i < chainSteps.length - 1 && (
-                    <div className="flex items-center pl-6">
-                      <ArrowRight className="w-3 h-3 text-slate-600" />
-                    </div>
-                  )}
-                </React.Fragment>
+                <ChainStep key={i} step={step} index={i} isLast={i === chainSteps.length - 1} />
               ))}
             </div>
           </div>
