@@ -23,25 +23,6 @@ class SentimentResult(BaseModel):
     sectors: List[str]  # detected affected sectors
 
 
-class GraphNode(BaseModel):
-    id: str
-    label: str
-    type: str           # event | sector | stock | economic
-    sentiment: str      # positive | negative | neutral
-
-
-class GraphEdge(BaseModel):
-    id: str
-    source: str
-    target: str
-    label: str
-
-
-class PropagationGraph(BaseModel):
-    nodes: List[GraphNode]
-    edges: List[GraphEdge]
-
-
 class StockSuggestion(BaseModel):
     ticker: str
     company: str
