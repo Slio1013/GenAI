@@ -76,6 +76,10 @@ export default function SectorCards({ analysis, isLoading }) {
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
             Sector Impact
           </h2>
+          <div className="ml-auto flex items-center gap-1.5">
+            <Zap className="w-3 h-3 text-slate-500" />
+            <span className="text-[10px] font-mono text-slate-500">Local NLP</span>
+          </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
           {[1,2,3,4].map((i) => (
@@ -94,7 +98,10 @@ export default function SectorCards({ analysis, isLoading }) {
         <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
           Sector Impact Detection
         </h2>
-        <span className="ml-auto text-[10px] font-mono text-slate-500">Groq</span>
+        <div className="ml-auto flex items-center gap-1.5">
+          <Zap className="w-3 h-3 text-slate-500" />
+          <span className="text-[10px] font-mono text-slate-500">Local NLP</span>
+        </div>
       </div>
 
       {sectors.length === 0 ? (
