@@ -1,5 +1,5 @@
-import React from 'react'
-import { ExternalLink, Clock, TrendingUp } from 'lucide-react'
+import React, { useState } from 'react'
+import { ExternalLink, Clock, TrendingUp, Link as LinkIcon, Loader2 } from 'lucide-react'
 import { formatTime, truncate, getSentimentBadgeClass, formatSector } from '../utils/helpers'
 
 function NewsCard({ article, isSelected, onClick, analysis }) {
@@ -83,7 +83,30 @@ function NewsCardSkeleton() {
   )
 }
 
-export default function NewsPanel({ articles, selectedArticle, onSelect, analyses, isLoading }) {
+export default function NewsPanel({ articles, selectedArticle, onSelect, analyses, isLoading, onIngestUrl }) {
+  const [urlInput, setUrlInput] = useState('')
+  const [isIngesting, setIsIngesting] = useState(false)
+  const [ingestError, setIngestError] = useState(null)
+
+  const handleIngest = async (e) => {
+    e.preventDefault()
+    if (!urlInput.trim()) return
+    
+    setIsIngesting(true)
+    setIngestError(null)
+    
+    try {
+      if (onIngestUrl) {
+        await onIngestUrl(urlInput.trim())
+        setUrlInput('')
+      }
+    } catch (err) {
+      setIngestError(err.response?.data?.detail || err.message || 'Failed to ingest URL')
+    } finally {
+      setIsIngesting(false)
+    }
+  }
+
   return (
     <div className="glass-card p-5 h-full flex flex-col">
       {/* Panel header */}
@@ -98,6 +121,36 @@ export default function NewsPanel({ articles, selectedArticle, onSelect, analyse
           </span>
         )}
       </div>
+
+      {/* URL Ingestion Form */}
+      <form onSubmit={handleIngest} className="mb-4 relative">
+        <div className="relative flex items-center">
+          <div className="absolute left-3 text-slate-500">
+            {isIngesting ? <Loader2 className="w-4 h-4 animate-spin" /> : <LinkIcon className="w-4 h-4" />}
+          </div>
+          <input
+            type="url"
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            placeholder="Paste news article URL here..."
+            disabled={isIngesting}
+            className="w-full bg-white/[0.02] border border-white/[0.06] rounded-lg py-2 pl-9 pr-20 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-brand-500/50 focus:bg-white/[0.04] transition-all disabled:opacity-50"
+            required
+          />
+          <button
+            type="submit"
+            disabled={isIngesting || !urlInput.trim()}
+            className="absolute right-1.5 top-1.5 bottom-1.5 px-3 bg-brand-500 hover:bg-brand-400 text-white text-xs font-medium rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+          >
+            Analyze
+          </button>
+        </div>
+        {ingestError && (
+          <div className="mt-2 text-[11px] text-red-400 flex items-center gap-1">
+            <span>⚠️</span> {ingestError}
+          </div>
+        )}
+      </form>
 
       {/* Articles list */}
       <div className="flex-1 overflow-y-auto space-y-2 pr-1">

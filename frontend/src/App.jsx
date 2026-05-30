@@ -5,7 +5,7 @@ import SentimentPanel from './components/SentimentPanel'
 import SectorCards from './components/SectorCards'
 import ReasoningPanel from './components/ReasoningPanel'
 import StocksPanel from './components/StocksPanel'
-import { fetchNews, analyzeArticle, getReasoning } from './services/api'
+import { fetchNews, analyzeArticle, getReasoning, ingestArticleUrl } from './services/api'
 
 export default function App() {
   // ── 1. State Variables ──────────────────────────────────────────────────────
@@ -147,6 +147,15 @@ export default function App() {
     }
   }
 
+  // ── 5. Ingest Custom URL ────────────────────────────────────────────────────
+  const handleIngestUrl = async (url) => {
+    // Throws on error, caught by NewsPanel to show inline error
+    const newArticle = await ingestArticleUrl(url)
+    
+    setArticles(prev => [newArticle, ...prev])
+    handleArticleSelect(newArticle)
+  }
+
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-surface-900">
@@ -187,6 +196,7 @@ export default function App() {
               onSelect={handleArticleSelect}
               analyses={analyses}
               isLoading={isLoadingNews}
+              onIngestUrl={handleIngestUrl}
             />
           </div>
 

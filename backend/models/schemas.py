@@ -37,6 +37,10 @@ class AnalyzeRequest(BaseModel):
     summary: str
 
 
+class IngestRequest(BaseModel):
+    url: str
+
+
 class ReasoningRequest(BaseModel):
     title: str
     summary: str

@@ -60,4 +60,12 @@ export const getReasoning = async ({ title, summary, sentiment, sectors }) => {
   return res.data
 }
 
+/**
+ * Ingest custom article URL
+ */
+export const ingestArticleUrl = async (url) => {
+  const res = await api.post('/news/ingest', { url })
+  return res.data
+}
+
 export default api
