@@ -31,7 +31,7 @@ api.interceptors.response.use(
 /**
  * Fetch latest financial news
  */
-export const fetchNews = async (count = 8) => {
+export const fetchNews = async (count = 40) => {
   const res = await api.get('/news/', { params: { count } })
   return res.data
 }
@@ -57,6 +57,12 @@ export const analyzeArticlesBatch = async (articles) => {
  */
 export const getReasoning = async ({ title, summary, sentiment, sectors }) => {
   const res = await api.post('/reasoning/', { title, summary, sentiment, sectors })
+  return res.data
+}
+
+/* Ingest custom article URL*/
+export const ingestArticleUrl = async (url) => {
+  const res = await api.post('/news/ingest', { url })
   return res.data
 }
 
