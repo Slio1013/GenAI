@@ -22,12 +22,12 @@ function ChainStep({ step, index, isLast }) {
   )
 }
 
-export default function ReasoningPanel({ reasoning, isLoading }) {
+export default function ReasoningPanel({ reasoning, isLoading, placeholderText }) {
   const [expanded, setExpanded] = useState(true)
 
   if (isLoading) {
     return (
-      <div className="glass-card p-5">
+      <div className="glass-card p-5 h-full">
         <div className="flex items-center gap-2 mb-4">
           <Cpu className="w-4 h-4 text-brand-400" />
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
@@ -49,7 +49,7 @@ export default function ReasoningPanel({ reasoning, isLoading }) {
 
   if (!reasoning) {
     return (
-      <div className="glass-card p-5">
+      <div className="glass-card p-5 h-full flex flex-col">
         <div className="flex items-center gap-2 mb-4">
           <Cpu className="w-4 h-4 text-brand-400" />
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
@@ -60,9 +60,11 @@ export default function ReasoningPanel({ reasoning, isLoading }) {
             <span className="text-[10px] font-mono text-slate-500">Groq</span>
           </div>
         </div>
-        <p className="text-sm text-slate-500 text-center py-6">
-          Select an article to generate AI analysis
-        </p>
+        <div className="flex-1 flex items-center justify-center -translate-y-4">
+          <p className="text-sm text-slate-500 text-center py-6">
+            {placeholderText || 'Select an article to generate AI analysis'}
+          </p>
+        </div>
       </div>
     )
   }
@@ -71,9 +73,9 @@ export default function ReasoningPanel({ reasoning, isLoading }) {
   const chainSteps = (r.chain_reaction || '').split('→').filter(Boolean)
 
   return (
-    <div className="glass-card p-5 animate-fade-in">
+    <div className="glass-card p-5 animate-fade-in h-full flex flex-col overflow-y-auto">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-4 flex-shrink-0">
         <Cpu className="w-4 h-4 text-brand-400" />
         <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
           AI Reasoning Engine
@@ -84,7 +86,7 @@ export default function ReasoningPanel({ reasoning, isLoading }) {
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 flex-1">
         {/* Economic Reasoning */}
         <div className="p-4 rounded-xl bg-gradient-to-br from-brand-500/[0.05] to-transparent border border-brand-500/15 shadow-[0_4px_16px_rgba(37,168,255,0.02)]">
           <p className="text-[10px] text-brand-400 font-mono uppercase tracking-wider mb-1.5 font-semibold">

@@ -5,6 +5,7 @@ import SentimentPanel from './components/SentimentPanel'
 import SectorCards from './components/SectorCards'
 import ReasoningPanel from './components/ReasoningPanel'
 import StocksPanel from './components/StocksPanel'
+import ScenarioPanel from './components/ScenarioPanel'
 import { fetchNews, analyzeArticle, getReasoning, ingestArticleUrl } from './services/api'
 
 export default function App() {
@@ -25,8 +26,62 @@ export default function App() {
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false)
   const [isLoadingReasoning, setIsLoadingReasoning] = useState(false)
 
+  // Scenario Sandbox specific states
+  const [activeMode, setActiveMode] = useState('news') // 'news' | 'scenario'
+  const [scenarioData, setScenarioData] = useState(null)
+  const [scenarioAnalysis, setScenarioAnalysis] = useState(null)
+  const [scenarioReasoning, setScenarioReasoning] = useState(null)
+  const [isLoadingScenarioAnalysis, setIsLoadingScenarioAnalysis] = useState(false)
+  const [isLoadingScenarioReasoning, setIsLoadingScenarioReasoning] = useState(false)
+
   const [error, setError] = useState(null)
   const selectedArticleIdRef = useRef(null)
+
+  // Function to analyze custom scenarios
+  const handleAnalyzeScenario = async (scenarioText) => {
+    setIsLoadingScenarioAnalysis(true)
+    setIsLoadingScenarioReasoning(true)
+    setScenarioAnalysis(null)
+    setScenarioReasoning(null)
+    setError(null)
+
+    // Extract a short title (first sentence or first 80 characters)
+    let title = scenarioText.split(/[.!?]\s/)[0]
+    if (title.length > 80) {
+      title = title.substring(0, 77) + '...'
+    }
+    const summary = scenarioText
+    setScenarioData({ title, summary })
+
+    try {
+      // Step A: Get Sentiment (Positive/Negative) and Sectors
+      const analysis = await analyzeArticle({
+        title,
+        summary,
+      })
+      setScenarioAnalysis(analysis)
+      setIsLoadingScenarioAnalysis(false)
+
+      // Step B: Get Deep Reasoning from Groq
+      const sectors = analysis?.sectors || ['general']
+      const sentiment = analysis?.sentiment?.label || 'neutral'
+
+      const reasoning = await getReasoning({
+        title,
+        summary,
+        sentiment,
+        sectors,
+      })
+      setScenarioReasoning(reasoning)
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message || 'Failed to analyze scenario. Check if backend is running.')
+      setScenarioAnalysis(null)
+      setScenarioReasoning(null)
+    } finally {
+      setIsLoadingScenarioAnalysis(false)
+      setIsLoadingScenarioReasoning(false)
+    }
+  }
 
   // ── 2. Load News When App Starts ────────────────────────────────────────────
   // useEffect runs this code once when the page first loads
@@ -41,7 +96,7 @@ export default function App() {
     try {
       const data = await fetchNews(40) // Get 40 articles
       setArticles(data.articles || [])
-      
+
       // Automatically run a quick AI analysis in the background for the top articles
       if (data.articles?.length > 0) {
         backgroundAnalyzeAll(data.articles)
@@ -51,6 +106,22 @@ export default function App() {
       console.error(err)
     } finally {
       setIsLoadingNews(false)
+    }
+  }
+
+  // Function to handle top-right Refresh button click
+  const handleRefresh = async () => {
+    setError(null)
+    if (activeMode === 'news') {
+      setSelectedArticle(null)
+      setCurrentAnalysis(null)
+      setCurrentReasoning(null)
+      selectedArticleIdRef.current = null
+      await loadNews()
+    } else {
+      setScenarioData(null)
+      setScenarioAnalysis(null)
+      setScenarioReasoning(null)
     }
   }
 
@@ -102,12 +173,12 @@ export default function App() {
         title: article.title,
         summary: article.summary,
       })
-      
+
       if (selectedArticleIdRef.current === article.id) {
         setCurrentAnalysis(analysis)
         setIsLoadingAnalysis(false)
       }
-      
+
       // Save it to our cache
       setAnalyses((prev) => ({ ...prev, [article.id]: analysis }))
 
@@ -132,11 +203,11 @@ export default function App() {
 
     try {
       // Send the article info to our backend (which talks to Groq)
-      const reasoning = await getReasoning({ 
-        title: article.title, 
-        summary: article.summary, 
-        sentiment, 
-        sectors 
+      const reasoning = await getReasoning({
+        title: article.title,
+        summary: article.summary,
+        sentiment,
+        sectors
       })
       if (selectedArticleIdRef.current === article.id) {
         setCurrentReasoning(reasoning)
@@ -154,7 +225,7 @@ export default function App() {
   const handleIngestUrl = async (url) => {
     // Throws on error, caught by NewsPanel to show inline error
     const newArticle = await ingestArticleUrl(url)
-    
+
     setArticles(prev => [newArticle, ...prev])
     handleArticleSelect(newArticle)
   }
@@ -170,7 +241,12 @@ export default function App() {
       </div>
 
       {/* Header */}
-      <Header onRefresh={loadNews} isLoading={isLoadingNews} />
+      <Header
+        onRefresh={handleRefresh}
+        isLoading={isLoadingNews}
+        activeMode={activeMode}
+        onModeChange={setActiveMode}
+      />
 
       {/* Main content */}
       <main className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 py-6">
@@ -189,47 +265,78 @@ export default function App() {
           </div>
         )}
 
-        {/* ── Row 1: News Feed + Sentiment + Stocks ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr_280px] gap-4 mb-4">
-          {/* News Feed */}
-          <div className="lg:row-span-2 min-h-[500px] lg:max-h-[700px]">
-            <NewsPanel
-              articles={articles}
-              selectedArticle={selectedArticle}
-              onSelect={handleArticleSelect}
-              analyses={analyses}
-              isLoading={isLoadingNews}
-              onIngestUrl={handleIngestUrl}
-            />
+        {/* ── Row 1: News Feed / Scenario Sandbox + Sentiment + Stocks ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr_280px] gap-4 mb-4">
+          {/* News Feed or Scenario Sandbox */}
+          <div className="lg:row-span-2 lg:h-[700px] flex flex-col">
+            {activeMode === 'news' ? (
+              <NewsPanel
+                articles={articles}
+                selectedArticle={selectedArticle}
+                onSelect={handleArticleSelect}
+                analyses={analyses}
+                isLoading={isLoadingNews}
+                onIngestUrl={handleIngestUrl}
+              />
+            ) : (
+              <ScenarioPanel
+                onAnalyze={handleAnalyzeScenario}
+                isLoading={isLoadingScenarioAnalysis || isLoadingScenarioReasoning}
+              />
+            )}
           </div>
 
           {/* Sentiment */}
-          <SentimentPanel
-            analysis={currentAnalysis}
-            isLoading={isLoadingAnalysis}
-            article={selectedArticle}
-          />
+          <div className="lg:h-[342px] flex flex-col">
+            <SentimentPanel
+              analysis={activeMode === 'news' ? currentAnalysis : scenarioAnalysis}
+              isLoading={activeMode === 'news' ? isLoadingAnalysis : isLoadingScenarioAnalysis}
+              article={activeMode === 'news' ? selectedArticle : scenarioData}
+              placeholderText={
+                activeMode === 'news'
+                  ? 'Select an article to analyze sentiment'
+                  : 'Enter a custom scenario and run analysis to view sentiment'
+              }
+            />
+          </div>
 
           {/* Stocks */}
-          <div className="lg:row-span-2">
+          <div className="lg:row-span-2 lg:h-[700px] flex flex-col">
             <StocksPanel
-              reasoning={currentReasoning}
-              isLoading={isLoadingReasoning}
+              reasoning={activeMode === 'news' ? currentReasoning : scenarioReasoning}
+              isLoading={activeMode === 'news' ? isLoadingReasoning : isLoadingScenarioReasoning}
+              placeholderText={
+                activeMode === 'news'
+                  ? 'Select an article to see stock signals'
+                  : 'Enter a custom scenario and run analysis to view stock signals'
+              }
             />
           </div>
 
           {/* AI Reasoning */}
-          <ReasoningPanel
-            reasoning={currentReasoning}
-            isLoading={isLoadingReasoning}
-          />
+          <div className="lg:h-[342px] flex flex-col">
+            <ReasoningPanel
+              reasoning={activeMode === 'news' ? currentReasoning : scenarioReasoning}
+              isLoading={activeMode === 'news' ? isLoadingReasoning : isLoadingScenarioReasoning}
+              placeholderText={
+                activeMode === 'news'
+                  ? 'Select an article to generate AI analysis'
+                  : 'Enter a custom scenario and run analysis to view AI reasoning'
+              }
+            />
+          </div>
         </div>
 
         {/* ── Row 2: Sector Impact ── */}
         <div className="mb-4">
           <SectorCards
-            analysis={currentAnalysis}
-            isLoading={isLoadingAnalysis}
+            analysis={activeMode === 'news' ? currentAnalysis : scenarioAnalysis}
+            isLoading={activeMode === 'news' ? isLoadingAnalysis : isLoadingScenarioAnalysis}
+            placeholderText={
+              activeMode === 'news'
+                ? 'Select an article to detect affected sectors'
+                : 'Enter a custom scenario and run analysis to view affected sectors'
+            }
           />
         </div>
 

@@ -71,10 +71,10 @@ function ConfidenceGauge({ confidence, color }) {
   )
 }
 
-export default function SentimentPanel({ analysis, isLoading, article }) {
+export default function SentimentPanel({ analysis, isLoading, article, placeholderText }) {
   if (isLoading) {
     return (
-      <div className="glass-card p-5">
+      <div className="glass-card p-5 h-full">
         <div className="flex items-center gap-2 mb-4">
           <Brain className="w-4 h-4 text-brand-400" />
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
@@ -98,7 +98,7 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
 
   if (!analysis) {
     return (
-      <div className="glass-card p-5">
+      <div className="glass-card p-5 h-full flex flex-col">
         <div className="flex items-center gap-2 mb-4">
           <Brain className="w-4 h-4 text-brand-400" />
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
@@ -109,9 +109,11 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
             <span className="text-[10px] font-mono text-slate-500">FinBERT</span>
           </div>
         </div>
-        <p className="text-sm text-slate-500 text-center py-6">
-          Select an article to analyze sentiment
-        </p>
+        <div className="flex-1 flex items-center justify-center -translate-y-4">
+          <p className="text-sm text-slate-500 text-center py-6">
+            {placeholderText || 'Select an article to analyze sentiment'}
+          </p>
+        </div>
       </div>
     )
   }
@@ -122,38 +124,40 @@ export default function SentimentPanel({ analysis, isLoading, article }) {
   const { Icon } = config
 
   return (
-    <div className={`glass-card p-5 border ${config.border} animate-fade-in`}>
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
-        <Brain className="w-4 h-4 text-brand-400" />
-        <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
-          Sentiment Analysis
-        </h2>
-        <div className="ml-auto flex items-center gap-1.5">
-          <Zap className="w-3 h-3 text-slate-500" />
-          <span className="text-[10px] font-mono text-slate-500">FinBERT</span>
-        </div>
-      </div>
-
-      {/* Main sentiment display */}
-      <div className={`rounded-xl p-5 bg-gradient-to-br ${config.bg} border ${config.border} ${config.shadow} mb-4`}>
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <Icon className="w-5 h-5" style={{ color: config.color }} />
-              <span
-                className="text-2xl font-display font-black tracking-tight"
-                style={{ color: config.color }}
-              >
-                {config.label}
-              </span>
-            </div>
-            <p className="text-xs text-slate-400 font-mono">
-              Financial sentiment classification
-            </p>
+    <div className={`glass-card p-5 border ${config.border} animate-fade-in h-full flex flex-col justify-between`}>
+      <div>
+        {/* Header */}
+        <div className="flex items-center gap-2 mb-4">
+          <Brain className="w-4 h-4 text-brand-400" />
+          <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
+            Sentiment Analysis
+          </h2>
+          <div className="ml-auto flex items-center gap-1.5">
+            <Zap className="w-3 h-3 text-slate-500" />
+            <span className="text-[10px] font-mono text-slate-500">FinBERT</span>
           </div>
-          <div className="flex-shrink-0">
-            <ConfidenceGauge confidence={confidence} color={config.color} />
+        </div>
+
+        {/* Main sentiment display */}
+        <div className={`rounded-xl p-5 bg-gradient-to-br ${config.bg} border ${config.border} ${config.shadow} mb-4`}>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <Icon className="w-5 h-5" style={{ color: config.color }} />
+                <span
+                  className="text-2xl font-display font-black tracking-tight"
+                  style={{ color: config.color }}
+                >
+                  {config.label}
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 font-mono">
+                Financial sentiment classification
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <ConfidenceGauge confidence={confidence} color={config.color} />
+            </div>
           </div>
         </div>
       </div>

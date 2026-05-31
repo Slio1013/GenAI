@@ -54,10 +54,10 @@ function StockSection({ title, stocks, Icon, color }) {
   )
 }
 
-export default function StocksPanel({ reasoning, isLoading }) {
+export default function StocksPanel({ reasoning, isLoading, placeholderText }) {
   if (isLoading) {
     return (
-      <div className="glass-card p-5">
+      <div className="glass-card p-5 h-full">
         <div className="flex items-center gap-2 mb-4">
           <DollarSign className="w-4 h-4 text-brand-400" />
           <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
@@ -82,9 +82,9 @@ export default function StocksPanel({ reasoning, isLoading }) {
   const bearish = stocks.filter((s) => s.direction === 'bearish')
 
   return (
-    <div className="glass-card p-5">
+    <div className="glass-card p-5 h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-4 flex-shrink-0">
         <DollarSign className="w-4 h-4 text-brand-400" />
         <h2 className="text-sm font-display font-semibold text-white uppercase tracking-wide">
           Stock Signals
@@ -98,26 +98,30 @@ export default function StocksPanel({ reasoning, isLoading }) {
       </div>
 
       {stocks.length === 0 ? (
-        <p className="text-sm text-slate-500 text-center py-6">
-          Select an article to see stock signals
-        </p>
+        <div className="flex-1 flex items-center justify-center -translate-y-4">
+          <p className="text-sm text-slate-500 text-center py-6">
+            {placeholderText || 'Select an article to see stock signals'}
+          </p>
+        </div>
       ) : (
-        <div className="space-y-4">
-          <StockSection
-            title="Bullish Picks"
-            stocks={bullish}
-            Icon={TrendingUp}
-            color="#34d399"
-          />
-          <StockSection
-            title="Bearish Picks"
-            stocks={bearish}
-            Icon={TrendingDown}
-            color="#f87171"
-          />
+        <div className="space-y-4 flex-1 flex flex-col justify-between">
+          <div className="space-y-4">
+            <StockSection
+              title="Bullish Picks"
+              stocks={bullish}
+              Icon={TrendingUp}
+              color="#34d399"
+            />
+            <StockSection
+              title="Bearish Picks"
+              stocks={bearish}
+              Icon={TrendingDown}
+              color="#f87171"
+            />
+          </div>
 
           {/* Disclaimer */}
-          <p className="text-[9px] text-slate-600 text-center mt-4 border-t border-white/[0.04] pt-3 leading-relaxed">
+          <p className="text-[9px] text-slate-600 text-center mt-4 border-t border-white/[0.04] pt-3 leading-relaxed flex-shrink-0">
             Note: For informational purposes only. Not financial advice.
           </p>
         </div>

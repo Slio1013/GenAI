@@ -1,7 +1,7 @@
 import React from 'react'
 import { Activity, Zap, Globe, RefreshCw } from 'lucide-react'
 
-export default function Header({ onRefresh, isLoading }) {
+export default function Header({ onRefresh, isLoading, activeMode, onModeChange }) {
   return (
     <header className="sticky top-0 z-50 w-full">
       {/* Frosted glass bar */}
@@ -25,12 +25,30 @@ export default function Header({ onRefresh, isLoading }) {
             </div>
           </div>
 
-          {/* Center status */}
-          <div className="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.07]">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs text-slate-400 font-mono">
-              LIVE FEED ACTIVE
-            </span>
+          {/* Mode Switcher */}
+          <div className="flex items-center bg-white/[0.03] p-0.5 rounded-lg border border-white/[0.06] shadow-inner">
+            <button
+              onClick={() => onModeChange('news')}
+              className={`px-3 py-1 rounded-md text-xs font-semibold tracking-wide transition-all duration-300 flex items-center gap-1.5 ${
+                activeMode === 'news'
+                  ? 'bg-brand-500 text-white shadow-[0_0_12px_rgba(37,168,255,0.25)]'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${activeMode === 'news' ? 'bg-white' : 'bg-emerald-400'} ${activeMode === 'news' ? 'animate-none' : 'animate-pulse'}`} />
+              Live News
+            </button>
+            <button
+              onClick={() => onModeChange('scenario')}
+              className={`px-3 py-1 rounded-md text-xs font-semibold tracking-wide transition-all duration-300 flex items-center gap-1.5 ${
+                activeMode === 'scenario'
+                  ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(168,85,247,0.25)]'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${activeMode === 'scenario' ? 'bg-white' : 'bg-purple-400'} ${activeMode === 'scenario' ? 'animate-none' : 'animate-pulse'}`} />
+              Scenario
+            </button>
           </div>
 
           {/* Right actions */}

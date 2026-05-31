@@ -64,7 +64,7 @@ function SectorCard({ sector, sentiment }) {
   )
 }
 
-export default function SectorCards({ analysis, isLoading }) {
+export default function SectorCards({ analysis, isLoading, placeholderText }) {
   const sectors = analysis?.sectors || []
   const sentiment = analysis?.sentiment?.label || 'neutral'
 
@@ -106,7 +106,7 @@ export default function SectorCards({ analysis, isLoading }) {
 
       {sectors.length === 0 ? (
         <p className="text-sm text-slate-500 text-center py-4">
-          Select an article to detect affected sectors
+          {placeholderText || 'Select an article to detect affected sectors'}
         </p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
